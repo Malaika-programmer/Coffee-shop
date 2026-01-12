@@ -2,68 +2,108 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Customize</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Customize - Coffee Break</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href=".../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    
     <style>
-        .cust-box { max-width: 500px; margin: 40px auto; padding: 20px; background: white; border-radius: 10px; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; font-weight: bold; margin-bottom: 5px; }
-        select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
-        
-        .btn-proceed { width: 100%; background: var(--accent-gold); color: white; padding: 15px; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 1.1rem; }
+        /* Default (Desktop) Styles */
+        .cust-box { 
+            max-width: 500px; 
+            margin: 40px auto; 
+            padding: 30px; 
+            background: white; 
+            border-radius: 15px; 
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05); 
+        }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-weight: bold; margin-bottom: 8px; color: #3b2a1e; }
+        select, input[type="text"] { 
+            width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem;
+        }
+        .btn-proceed { 
+            width: 100%; background: #3b2a1e; color: white; padding: 15px; 
+            border: none; border-radius: 50px; font-weight: bold; cursor: pointer; 
+            font-size: 1.1rem; transition: 0.3s; margin-top: 10px;
+        }
+        .btn-proceed:hover { background: #c7a17a; }
+
+        /* --- MOBILE FIXES --- */
+        @media (max-width: 600px) {
+            .cust-box {
+                width: 90%; /* Take up 90% of screen width */
+                margin: 20px auto; /* Less margin on top */
+                padding: 20px; /* Less padding inside */
+            }
+            h2 { font-size: 1.5rem; }
+            /* Make checkboxes easier to tap */
+            .form-group label input[type="checkbox"] { transform: scale(1.2); margin-right: 8px; }
+        }
     </style>
 </head>
 <body>
     <div id="header-placeholder"></div>
 
     <div class="cust-box">
-        <h2 style="text-align:center; color:var(--primary-brown);">Customize Drink</h2>
+        <h2 style="text-align:center; color:#3b2a1e; margin-bottom: 20px;">Customize Drink</h2>
         
         <form id="custForm">
             <div class="form-group">
                 <label>Coffee</label>
-                <input type="text" id="cName" readonly style="width:100%; padding:10px; background:#eee; border:none; font-weight:bold;">
+                <input type="text" id="cName" readonly style="background:#f5f1eb; border:none; color: #555;">
                 <input type="hidden" id="cPrice">
             </div>
 
             <div class="form-group">
                 <label>Size</label>
-                <select id="size"><option value="Small">Small</option><option value="Medium">Medium (+20%)</option><option value="Large">Large (+50%)</option></select>
+                <select id="size">
+                    <option value="Small">Small</option>
+                    <option value="Medium">Medium (+20%)</option>
+                    <option value="Large">Large (+50%)</option>
+                </select>
             </div>
 
             <div class="form-group">
                 <label>Milk</label>
-                <select id="milk"><option value="Regular">Regular</option><option value="Skim">Skim</option><option value="Oat">Oat (+$0.50)</option><option value="Almond">Almond (+$0.50)</option></select>
+                <select id="milk">
+                    <option value="Regular">Regular</option>
+                    <option value="Skim">Skim</option>
+                    <option value="Oat">Oat (+$0.50)</option>
+                    <option value="Almond">Almond (+$0.50)</option>
+                </select>
             </div>
 
             <div class="form-group">
                 <label>Extras ($0.50 each)</label>
-                <div style="display:grid; grid-template-columns:1fr 1fr;">
-                    <label><input type="checkbox" value="0.50" class="extra"> Extra Shot</label>
-                    <label><input type="checkbox" value="0.50" class="extra"> Caramel</label>
-                    <label><input type="checkbox" value="0.50" class="extra"> Vanilla</label>
-                    <label><input type="checkbox" value="0.50" class="extra"> Whipped Cream</label>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap: 15px;">
+                    <label style="font-weight: normal;"><input type="checkbox" value="0.50" class="extra"> Extra Shot</label>
+                    <label style="font-weight: normal;"><input type="checkbox" value="0.50" class="extra"> Caramel</label>
+                    <label style="font-weight: normal;"><input type="checkbox" value="0.50" class="extra"> Vanilla</label>
+                    <label style="font-weight: normal;"><input type="checkbox" value="0.50" class="extra"> Whip Cream</label>
                 </div>
             </div>
 
-            <button type="submit" class="btn-proceed">Proceed to Checkout <i class="fas fa-arrow-right"></i></button>
+            <button type="submit" class="btn-proceed">
+                Add to Cart <i class="fas fa-shopping-cart"></i>
+            </button>
         </form>
     </div>
 
     <div id="footer-placeholder"></div>
-    <script src=".../assets/js/app.js"></script>
+    <script src="../assets/js/app.js"></script>
+    
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
-            document.getElementById('cName').value = params.get('coffee');
-            document.getElementById('cPrice').value = params.get('price');
+            document.getElementById('cName').value = params.get('coffee') || "Coffee";
+            document.getElementById('cPrice').value = params.get('price') || "3.00";
         });
 
         document.getElementById('custForm').onsubmit = function(e) {
             e.preventDefault();
             
-            // Calculate Price
+            // Logic to calculate price
             let base = parseFloat(document.getElementById('cPrice').value);
             let size = document.getElementById('size').value;
             let mult = size === 'Medium' ? 1.2 : (size === 'Large' ? 1.5 : 1);
@@ -79,18 +119,22 @@
             });
 
             let finalPrice = (base * mult) + extraCost;
-            let details = `${size}, ${milk}` + (extrasArr.length ? ` + ${extrasArr.join(',')}` : '');
+            let details = `${size}, ${milk}` + (extrasArr.length ? ` + ${extrasArr.join(', ')}` : '');
 
-            // Save for Order Page
-            const item = {
+            const newItem = {
                 name: document.getElementById('cName').value + " (Custom)",
                 details: details,
                 price: finalPrice,
                 quantity: 1
             };
             
-            sessionStorage.setItem('checkout_items', JSON.stringify([item]));
-            window.location.href = '/pages/orderpage.html';
+            // Save to Cart
+            let cart = JSON.parse(localStorage.getItem('coffee_cart')) || [];
+            cart.push(newItem);
+            localStorage.setItem('coffee_cart', JSON.stringify(cart));
+
+            // Redirect to Checkout (Fixed Link)
+            window.location.href = '/pages/checkout.html';
         };
     </script>
 </body>

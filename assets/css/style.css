@@ -215,3 +215,14 @@ footer {
     /* Move nav actions (cart) to left of hamburger */
     .nav-actions { margin-right: 60px; }
 }
+@media (max-width: 900px) {
+    .desktop-menu { display: none !important; }
+    .desktop-auth { display: none !important; }
+    .hamburger { display: block !important; }
+    
+    /* Adjust container widths for mobile */
+    .checkout-wrapper, .container {
+        grid-template-columns: 1fr;
+        padding: 0 15px;
+    }
+}
