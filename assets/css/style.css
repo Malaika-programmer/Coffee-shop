@@ -184,21 +184,46 @@ header {
 .overlay.active { opacity: 1; visibility: visible; }
 
 /* --- 4. FOOTER --- */
+/* --- 4. FOOTER --- */
 footer {
     background-color: var(--footer-bg);
     color: var(--text-white);
     padding: 40px 20px;
     margin-top: auto;
+    text-align: center; /* 1. Centers all text inside footer */
 }
+
 .footer-container {
-    max-width: 1100px; margin: 0 auto;
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    max-width: 1100px; 
+    margin: 0 auto;
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 30px;
+    /* Optional: justify-items: center; if you want the columns themselves centered tightly */
 }
-.footer-col h3 { color: var(--accent-gold); margin-bottom: 15px; }
-.footer-col ul li { margin-bottom: 10px; }
-.footer-col ul li a { color: #ccc; }
-.footer-col ul li a:hover { color: var(--accent-gold); }
+
+.footer-col h3 { 
+    color: var(--accent-gold); 
+    margin-bottom: 15px; 
+}
+
+/* 2. Important: Remove default padding from lists to center them perfectly */
+.footer-col ul {
+    padding: 0;
+    list-style: none;
+}
+
+.footer-col ul li { 
+    margin-bottom: 10px; 
+}
+
+.footer-col ul li a { 
+    color: #ccc; 
+}
+
+.footer-col ul li a:hover { 
+    color: var(--accent-gold); 
+}
 
 /* --- 5. RESPONSIVE BREAKPOINT (Mobile/Tablet) --- */
 @media (max-width: 900px) {

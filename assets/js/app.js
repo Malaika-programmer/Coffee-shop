@@ -118,5 +118,7 @@ function updateGlobalCartCount() {
 }
 function loadFooter() {
     const f = document.getElementById("footer-placeholder");
-    if (f) f.innerHTML = `<footer><p>&copy; 2026 Coffee Break</p></footer>`;
+    if (f) f.innerHTML = `<footer><p>&copy; 2026 Coffee Break: all right reserved</p>
+     <p>Developed by Malaika Azam</p>
+    </footer>`;
 }
