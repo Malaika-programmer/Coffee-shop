@@ -28,9 +28,6 @@
         .btn-confirm:hover { background: #c7a17a; transform: translateY(-2px); }
         
         /* Modal Styles */
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; display: none; justify-content: center; align-items: center; flex-direction: column; }
-        .success-msg { color: white; text-align: center; margin-bottom: 20px; animation: popIn 0.5s ease; }
-        .success-msg i { font-size: 4rem; color: #4CAF50; background: white; padding: 15px; border-radius: 50%; margin-bottom: 15px; }
         .receipt-box { background: white; width: 360px; padding: 25px; font-family: 'Courier New', monospace; position: relative; text-align: center; }
         .receipt-box::after { content: ""; position: absolute; bottom: -10px; left: 0; width: 100%; height: 10px; background: radial-gradient(circle, transparent 50%, white 50%), radial-gradient(circle, transparent 50%, white 50%); background-size: 20px 20px; background-position: 0 0, 10px 0; }
         .receipt-actions { margin-top: 20px; display: flex; gap: 10px; }
@@ -39,6 +36,49 @@
         .btn-done { background: #4CAF50; color: white; text-decoration: none; }
         @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         @media (max-width: 768px) { .checkout-wrapper { grid-template-columns: 1fr; } .summary-card { order: -1; } }
+        /* ================= ORDER SUMMARY ================= */
+
+.order-items {
+    margin: 20px 0;
+}
+
+/* Each product row */
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px dashed #ddd;
+    font-size: 0.95rem;
+}
+
+.summary-item small {
+    display: block;
+    color: #777;
+    font-size: 0.8rem;
+}
+
+/* Subtotal & Delivery rows */
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    font-size: 0.95rem;
+    color: #555;
+}
+
+/* Final total row */
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 15px;
+    margin-top: 10px;
+    border-top: 2px solid #000;
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #3b2a1e;
+}
+
     </style>
 </head>
 <body>
@@ -120,13 +160,6 @@
 
         </div>
     </form>
-
-    <div class="overlay" id="invoiceModal">
-        <div class="success-msg">
-            <i class="fas fa-check"></i>
-            <h2>Success!</h2>
-            <p>Your order has been placed.</p>
-        </div>
 
         <div class="receipt-box" id="receipt">
             <h3 style="margin:0; border-bottom:2px solid #000; padding-bottom:10px;">COFFEE BREAK</h3>
@@ -262,8 +295,6 @@
                     </div>
                 `;
             });
-
-            document.getElementById('invoiceModal').style.display = 'flex';
 
             // Clear Cart
             sessionStorage.removeItem('checkout_items');
