@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout - Coffee Break</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="stylesheet" href="../assets/css/style.css">
 
     <style>
@@ -27,58 +26,12 @@
         .btn-confirm { width: 100%; background: #3b2a1e; color: white; padding: 18px; border: none; border-radius: 50px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 25px; transition: 0.3s; box-shadow: 0 5px 15px rgba(59, 42, 30, 0.3); }
         .btn-confirm:hover { background: #c7a17a; transform: translateY(-2px); }
         
-        /* Modal Styles */
-        .receipt-box { background: white; width: 360px; padding: 25px; font-family: 'Courier New', monospace; position: relative; text-align: center; }
-        .receipt-box::after { content: ""; position: absolute; bottom: -10px; left: 0; width: 100%; height: 10px; background: radial-gradient(circle, transparent 50%, white 50%), radial-gradient(circle, transparent 50%, white 50%); background-size: 20px 20px; background-position: 0 0, 10px 0; }
-        .receipt-actions { margin-top: 20px; display: flex; gap: 10px; }
-        .btn-act { padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; border: none; }
-        .btn-dl { background: white; color: #333; }
-        .btn-done { background: #4CAF50; color: white; text-decoration: none; }
-        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        /* Summary Items Styling */
+        .summary-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px dashed #ddd; font-size: 0.95rem; }
+        .price-row { display: flex; justify-content: space-between; padding: 12px 0; font-size: 0.95rem; color: #555; }
+        .total-row { display: flex; justify-content: space-between; padding-top: 15px; margin-top: 10px; border-top: 2px solid #000; font-weight: bold; font-size: 1.2rem; color: #3b2a1e; }
+        
         @media (max-width: 768px) { .checkout-wrapper { grid-template-columns: 1fr; } .summary-card { order: -1; } }
-        /* ================= ORDER SUMMARY ================= */
-
-.order-items {
-    margin: 20px 0;
-}
-
-/* Each product row */
-.summary-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 0;
-    border-bottom: 1px dashed #ddd;
-    font-size: 0.95rem;
-}
-
-.summary-item small {
-    display: block;
-    color: #777;
-    font-size: 0.8rem;
-}
-
-/* Subtotal & Delivery rows */
-.price-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 12px 0;
-    font-size: 0.95rem;
-    color: #555;
-}
-
-/* Final total row */
-.total-row {
-    display: flex;
-    justify-content: space-between;
-    padding-top: 15px;
-    margin-top: 10px;
-    border-top: 2px solid #000;
-    font-weight: bold;
-    font-size: 1.2rem;
-    color: #3b2a1e;
-}
-
     </style>
 </head>
 <body>
@@ -140,6 +93,7 @@
             <div class="summary-card">
                 <h2>Order Summary</h2>
                 <div class="order-items" id="summaryList"></div>
+                
                 <div class="price-row">
                     <span>Subtotal</span>
                     <span>$<span id="subTotal">0.00</span></span>
@@ -157,48 +111,23 @@
                     Confirm & Pay $<span id="btnTotal">0.00</span>
                 </button>
             </div>
-
         </div>
     </form>
 
-        <div class="receipt-box" id="receipt">
-            <h3 style="margin:0; border-bottom:2px solid #000; padding-bottom:10px;">COFFEE BREAK</h3>
-            <p style="font-size:0.8rem; margin-top:5px;">OFFICIAL RECEIPT</p>
-            
-            <div style="text-align:left; font-size:0.9rem; line-height:1.4; margin-top:20px;">
-                <p><strong>Date:</strong> <span id="invDate"></span></p>
-                <p><strong>Order ID:</strong> #<span id="invId"></span></p>
-                <p><strong>Customer:</strong> <span id="invName"></span></p>
-                <p><strong>Payment:</strong> <span id="invPay"></span></p>
-                <hr style="border:1px dashed #ccc; margin:15px 0;">
-                <div id="invItemsList"></div>
-                <hr style="border:2px solid #000; margin:15px 0;">
-                <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:1.2rem;">
-                    <span>TOTAL</span>
-                    <span>$<span id="invTotal"></span></span>
-                </div>
-            </div>
-            <p style="font-size:0.7rem; color:#777; margin-top:20px;">Thank you for brewing with us!</p>
-        </div>
-
-        <div class="receipt-actions">
-            <button class="btn-act btn-dl" onclick="savePNG()"> <i class="fas fa-download"></i> Save PNG</button>
-            <a href="../index.html" class="btn-act btn-done">Finish</a>
-        </div>
-    </div>
-
     <div id="footer-placeholder"></div>
-    <script src="/assets/js/app.js"></script>
+    <script src="../assets/js/app.js"></script>
 
     <script>
         let orderItems = [];
 
+        // 1. PAYMENT SELECTION STYLE
         function selectPay(element) {
             document.querySelectorAll('.pay-card').forEach(el => el.classList.remove('active'));
             element.classList.add('active');
             element.querySelector('input').checked = true;
         }
 
+        // 2. LOAD CART
         document.addEventListener('DOMContentLoaded', () => {
             const direct = sessionStorage.getItem('checkout_items');
             const cart = localStorage.getItem('coffee_cart');
@@ -211,13 +140,14 @@
 
             if(!orderItems || orderItems.length === 0) {
                 alert("Your cart is empty!");
-                window.location.href = '/pages/menu.html';
+                window.location.href = 'menu.html';
                 return;
             }
 
             renderSummary();
         });
 
+        // 3. RENDER SUMMARY
         function renderSummary() {
             const list = document.getElementById('summaryList');
             let total = 0;
@@ -229,7 +159,7 @@
                 list.innerHTML += `
                     <div class="summary-item">
                         <div>
-                            <strong>${item.name}</strong>
+                            <strong>${item.name}</strong><br>
                             <small>x${item.quantity}</small>
                         </div>
                         <span style="font-weight:bold;">$${lineTotal.toFixed(2)}</span>
@@ -243,7 +173,7 @@
             document.getElementById('btnTotal').textContent = totalStr;
         }
 
-        // --- SUBMIT LOGIC WITH NETLIFY INTEGRATION ---
+        // 4. SUBMIT LOGIC (NO INVOICE POPUP)
         document.getElementById('checkoutForm').addEventListener('submit', function(e) {
             e.preventDefault(); 
 
@@ -253,18 +183,18 @@
             const payment = document.querySelector('input[name="payment"]:checked').value;
             const total = document.getElementById('finalTotal').textContent;
 
-            // 1. FILL THE HIDDEN NETLIFY FORM (This sends data to Admin Panel)
+            // --- A. FILL HIDDEN FORM FOR NETLIFY ADMIN ---
             document.getElementById('netName').value = name;
             document.getElementById('netPhone').value = phone;
             document.getElementById('netAddr').value = addr;
             document.getElementById('netPay').value = payment;
             document.getElementById('netTotal').value = total;
             
-            // Convert Cart Items to readable text for Admin
+            // Format Cart Items for Admin View
             const cartText = orderItems.map(i => `${i.quantity}x ${i.name}`).join('\n');
             document.getElementById('netDetails').value = cartText;
 
-            // 2. SEND DATA TO NETLIFY AUTOMATICALLY
+            // --- B. SEND DATA TO NETLIFY ---
             const hiddenForm = document.getElementById('hiddenOrderForm');
             const formData = new FormData(hiddenForm);
 
@@ -274,45 +204,27 @@
                 body: new URLSearchParams(formData).toString()
             }).then(() => {
                 console.log("Order sent to Admin Panel successfully");
+                
+                // --- C. SUCCESS MESSAGE & REDIRECT ---
+                alert("🎉 Order Placed Successfully! Thank you for brewing with us.");
+                
+                // Clear Cart
+                sessionStorage.removeItem('checkout_items');
+                localStorage.removeItem('coffee_cart');
+                
+                // Update Badge
+                if(typeof updateGlobalCartCount === "function") {
+                    updateGlobalCartCount();
+                }
+
+                // Redirect to Menu
+                window.location.href = 'menu.html';
+
             }).catch((error) => {
                 console.error("Netlify Error:", error);
+                alert("Something went wrong. Please try again.");
             });
-
-            // 3. SHOW THE USER INVOICE (Visual)
-            document.getElementById('invDate').textContent = new Date().toLocaleDateString();
-            document.getElementById('invId').textContent = Math.floor(Math.random() * 90000) + 10000;
-            document.getElementById('invName').textContent = name;
-            document.getElementById('invPay').textContent = payment;
-            document.getElementById('invTotal').textContent = total;
-
-            const invList = document.getElementById('invItemsList');
-            invList.innerHTML = "";
-            orderItems.forEach(item => {
-                invList.innerHTML += `
-                    <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                        <span>${item.quantity}x ${item.name}</span>
-                        <span>$${(item.price * item.quantity).toFixed(2)}</span>
-                    </div>
-                `;
-            });
-
-            // Clear Cart
-            sessionStorage.removeItem('checkout_items');
-            localStorage.removeItem('coffee_cart');
-            if(typeof updateGlobalCartCount === "function") {
-                updateGlobalCartCount();
-            }
         });
-
-        function savePNG() {
-            const receipt = document.getElementById('receipt');
-            html2canvas(receipt, { scale: 2 }).then(canvas => {
-                const link = document.createElement('a');
-                link.download = 'Receipt.png';
-                link.href = canvas.toDataURL();
-                link.click();
-            });
-        }
     </script>
 </body>
 </html>
