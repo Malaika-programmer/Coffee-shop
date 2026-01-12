@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Customize</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <style>
+        .cust-box { max-width: 500px; margin: 40px auto; padding: 20px; background: white; border-radius: 10px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; }
+        select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+        
+        .btn-proceed { width: 100%; background: var(--accent-gold); color: white; padding: 15px; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 1.1rem; }
+    </style>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+
+    <div class="cust-box">
+        <h2 style="text-align:center; color:var(--primary-brown);">Customize Drink</h2>
+        
+        <form id="custForm">
+            <div class="form-group">
+                <label>Coffee</label>
+                <input type="text" id="cName" readonly style="width:100%; padding:10px; background:#eee; border:none; font-weight:bold;">
+                <input type="hidden" id="cPrice">
+            </div>
+
+            <div class="form-group">
+                <label>Size</label>
+                <select id="size"><option value="Small">Small</option><option value="Medium">Medium (+20%)</option><option value="Large">Large (+50%)</option></select>
+            </div>
+
+            <div class="form-group">
+                <label>Milk</label>
+                <select id="milk"><option value="Regular">Regular</option><option value="Skim">Skim</option><option value="Oat">Oat (+$0.50)</option><option value="Almond">Almond (+$0.50)</option></select>
+            </div>
+
+            <div class="form-group">
+                <label>Extras ($0.50 each)</label>
+                <div style="display:grid; grid-template-columns:1fr 1fr;">
+                    <label><input type="checkbox" value="0.50" class="extra"> Extra Shot</label>
+                    <label><input type="checkbox" value="0.50" class="extra"> Caramel</label>
+                    <label><input type="checkbox" value="0.50" class="extra"> Vanilla</label>
+                    <label><input type="checkbox" value="0.50" class="extra"> Whipped Cream</label>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-proceed">Proceed to Checkout <i class="fas fa-arrow-right"></i></button>
+        </form>
+    </div>
+
+    <div id="footer-placeholder"></div>
+    <script src="/assets/js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            document.getElementById('cName').value = params.get('coffee');
+            document.getElementById('cPrice').value = params.get('price');
+        });
+
+        document.getElementById('custForm').onsubmit = function(e) {
+            e.preventDefault();
+            
+            // Calculate Price
+            let base = parseFloat(document.getElementById('cPrice').value);
+            let size = document.getElementById('size').value;
+            let mult = size === 'Medium' ? 1.2 : (size === 'Large' ? 1.5 : 1);
+            
+            let extraCost = 0;
+            let milk = document.getElementById('milk').value;
+            if(milk === 'Oat' || milk === 'Almond') extraCost += 0.50;
+            
+            let extrasArr = [];
+            document.querySelectorAll('.extra:checked').forEach(cb => {
+                extraCost += 0.50;
+                extrasArr.push(cb.parentNode.innerText.trim());
+            });
+
+            let finalPrice = (base * mult) + extraCost;
+            let details = `${size}, ${milk}` + (extrasArr.length ? ` + ${extrasArr.join(',')}` : '');
+
+            // Save for Order Page
+            const item = {
+                name: document.getElementById('cName').value + " (Custom)",
+                details: details,
+                price: finalPrice,
+                quantity: 1
+            };
+            
+            sessionStorage.setItem('checkout_items', JSON.stringify([item]));
+            window.location.href = '/pages/orderpage.html';
+        };
+    </script>
+</body>
+</html>

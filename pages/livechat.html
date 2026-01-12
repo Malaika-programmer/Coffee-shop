@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Chat - Coffee Break</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
+
+    <style>
+        .chat-wrapper {
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 600px;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            height: 70vh; /* Takes up 70% of screen height */
+            min-height: 500px;
+        }
+
+        /* Chat Header */
+        .chat-header {
+            background: linear-gradient(135deg, var(--primary-brown), var(--secondary-brown));
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 4px solid var(--accent-gold);
+        }
+        .chat-header h2 { font-size: 1.5rem; margin-bottom: 5px; }
+        .status-dot {
+            height: 10px; width: 10px;
+            background-color: #4CAF50;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        /* Chat Body (Messages Area) */
+        .chat-body {
+            flex: 1;
+            padding: 20px;
+            background-color: #f9f9f9;
+            background-image: radial-gradient(#ddd 1px, transparent 1px);
+            background-size: 20px 20px; /* Subtle pattern */
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Messages */
+        .message {
+            max-width: 80%;
+            padding: 12px 18px;
+            border-radius: 18px;
+            font-size: 1rem;
+            line-height: 1.5;
+            position: relative;
+            animation: popIn 0.3s ease;
+        }
+
+        .agent-message {
+            background: white;
+            color: #333;
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+        }
+
+        .user-message {
+            background: var(--accent-gold);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+            box-shadow: 0 2px 5px rgba(199, 161, 122, 0.4);
+        }
+
+        /* Input Area */
+        .chat-footer {
+            padding: 15px;
+            background: white;
+            border-top: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #chat-input {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 50px;
+            font-size: 1rem;
+            outline: none;
+            transition: 0.3s;
+        }
+        #chat-input:focus { border-color: var(--accent-gold); }
+
+        #send-btn {
+            background: var(--primary-brown);
+            color: white;
+            border: none;
+            width: 50px; height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: 0.3s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        #send-btn:hover { background: var(--accent-gold); transform: rotate(-10deg); }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 480px) {
+            .chat-wrapper { padding: 0; }
+            .chat-container { height: 85vh; border-radius: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="header-placeholder"></div>
+
+    <div class="chat-wrapper">
+        <div class="chat-container">
+            <div class="chat-header">
+                <h2><span class="status-dot"></span>Live Support</h2>
+                <div style="font-size: 0.9rem; opacity: 0.9;">Typical reply time: 2 minutes</div>
+            </div>
+
+            <div class="chat-body" id="chat-body">
+                <div class="message agent-message">
+                    <strong>Support Agent:</strong><br>
+                    Hello! Welcome to Coffee Break ☕.<br>How can I help you today?
+                </div>
+            </div>
+
+            <div class="chat-footer">
+                <input type="text" id="chat-input" placeholder="Type your message..." autocomplete="off">
+                <button id="send-btn"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="/assets/js/app.js"></script>
+    
+    <script>
+        const chatBody = document.getElementById('chat-body');
+        const chatInput = document.getElementById('chat-input');
+        const sendBtn = document.getElementById('send-btn');
+
+        // Helper: Add Message to Screen
+        function addMessage(text, sender) {
+            const msgDiv = document.createElement('div');
+            msgDiv.classList.add('message', sender === 'user' ? 'user-message' : 'agent-message');
+            
+            if (sender === 'agent') {
+                msgDiv.innerHTML = `<strong>Support Agent:</strong><br>${text}`;
+            } else {
+                msgDiv.textContent = text;
+            }
+
+            chatBody.appendChild(msgDiv);
+            chatBody.scrollTop = chatBody.scrollHeight; // Auto-scroll to bottom
+        }
+
+        // Logic: Send Message
+        function sendMessage() {
+            const text = chatInput.value.trim();
+            if (!text) return;
+
+            // 1. Add User Message
+            addMessage(text, 'user');
+            chatInput.value = '';
+
+            // 2. Simulate Bot Thinking (Delay)
+            setTimeout(() => {
+                const replies = [
+                    "Thanks for reaching out! A human agent will be with you shortly.",
+                    "We are preparing your coffee with love! ☕",
+                    "Your order is confirmed! Estimated delivery is 30-45 mins.",
+                    "Yes, we do offer oat and almond milk options!",
+                    "You can track your order in the 'My Orders' section.",
+                    "Is there anything else I can help you with?"
+                ];
+                // Pick a random reply
+                const randomReply = replies[Math.floor(Math.random() * replies.length)];
+                addMessage(randomReply, 'agent');
+            }, 1500); // 1.5 seconds delay
+        }
+
+        // Event Listeners
+        sendBtn.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+    </script>
+</body>
+</html>

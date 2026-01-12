@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart - Coffee Break</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
+
+    <style>
+        .cart-hero {
+            background-color: var(--secondary-brown);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .cart-container {
+            max-width: 900px;
+            margin: 20px auto 60px;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 2fr 1fr; /* 2 parts list, 1 part summary */
+            gap: 30px;
+        }
+
+        /* Cart Items List */
+        .cart-list {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            overflow: hidden;
+            height: fit-content;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            gap: 15px;
+        }
+        .cart-item:last-child { border-bottom: none; }
+
+        .item-icon {
+            font-size: 2rem;
+            color: var(--primary-brown);
+            width: 50px;
+            text-align: center;
+        }
+
+        .item-details { flex-grow: 1; }
+        .item-details h4 { margin: 0 0 5px; color: var(--primary-brown); font-size: 1.1rem; }
+        .item-price { color: #666; font-size: 0.95rem; }
+
+        /* Quantity Controls (+ / -) */
+        .qty-controls {
+            display: flex;
+            align-items: center;
+            background: #f5f1eb;
+            border-radius: 50px;
+            padding: 5px;
+        }
+        .qty-btn {
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1rem;
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.2s;
+        }
+        .qty-minus { background: #e0e0e0; color: #333; }
+        .qty-plus { background: var(--accent-gold); color: white; }
+        
+        .qty-minus:hover { background: #ccc; }
+        .qty-plus:hover { background: #b58963; }
+
+        .qty-display {
+            width: 30px; text-align: center; font-weight: bold;
+        }
+
+        /* Delete Button */
+        .btn-delete {
+            background: none; border: none;
+            color: #ff4d4d; font-size: 1.2rem;
+            cursor: pointer; margin-left: 10px;
+            transition: 0.2s;
+        }
+        .btn-delete:hover { transform: scale(1.1); color: #d32f2f; }
+
+        /* Summary Box */
+        .cart-summary {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            height: fit-content;
+            position: sticky;
+            top: 100px; /* Sticks when scrolling */
+        }
+
+        .summary-row {
+            display: flex; justify-content: space-between;
+            margin-bottom: 15px; font-size: 0.95rem; color: #555;
+        }
+        .total-row {
+            border-top: 2px dashed #eee;
+            padding-top: 15px;
+            margin-top: 10px;
+            font-weight: bold;
+            font-size: 1.4rem;
+            color: var(--primary-brown);
+        }
+
+        .btn-place-order {
+            background: var(--primary-brown);
+            color: white;
+            width: 100%;
+            padding: 15px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: 0.3s;
+            display: flex; justify-content: center; align-items: center; gap: 10px;
+        }
+        .btn-place-order:hover { background: var(--secondary-brown); transform: translateY(-2px); }
+
+        .empty-cart {
+            text-align: center; padding: 60px 20px; color: #888; width: 100%;
+            grid-column: span 2; background: white; border-radius: 15px;
+        }
+        .empty-cart i { font-size: 4rem; margin-bottom: 20px; color: #ddd; }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .cart-container { grid-template-columns: 1fr; }
+            .cart-item { flex-wrap: wrap; }
+            .item-details { width: 100%; margin-bottom: 10px; }
+            .qty-controls { margin-right: auto; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="header-placeholder"></div>
+
+    <section class="cart-hero">
+        <h1>Your Shopping Cart</h1>
+    </section>
+
+    <div class="cart-container" id="mainContainer">
+        </div>
+
+    <div id="footer-placeholder"></div>
+    <script src="/assets/js/app.js"></script>
+
+    <script>
+        // 1. Auth Check
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = localStorage.getItem('user');
+            if (!user) {
+                alert("Please login to view your cart.");
+                window.location.href = '/index.html';
+                return;
+            }
+            renderCart();
+        });
+
+        // 2. Render Cart
+        function renderCart() {
+            const cart = JSON.parse(localStorage.getItem('coffee_cart')) || [];
+            const container = document.getElementById('mainContainer');
+            
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-cart">
+                        <i class="fas fa-mug-hot"></i>
+                        <h2>Your cart is empty</h2>
+                        <p>Looks like you haven't added any coffee yet.</p>
+                        <a href="/pages/menu.html" style="display:inline-block; margin-top:20px; color:var(--accent-gold); font-weight:bold;">Browse Menu</a>
+                    </div>
+                `;
+                return;
+            }
+
+            let itemsHtml = '<div class="cart-list">';
+            let subtotal = 0;
+
+            cart.forEach((item, index) => {
+                const itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
+
+                itemsHtml += `
+                    <div class="cart-item">
+                        <div class="item-icon"><i class="fas fa-coffee"></i></div>
+                        <div class="item-details">
+                            <h4>${item.name}</h4>
+                            <span class="item-price">$${item.price.toFixed(2)} each</span>
+                        </div>
+                        
+                        <div class="qty-controls">
+                            <button class="qty-btn qty-minus" onclick="updateQty(${index}, -1)">-</button>
+                            <span class="qty-display">${item.quantity}</span>
+                            <button class="qty-btn qty-plus" onclick="updateQty(${index}, 1)">+</button>
+                        </div>
+
+                        <div style="font-weight:bold; min-width:60px; text-align:right;">
+                            $${itemTotal.toFixed(2)}
+                        </div>
+
+                        <button class="btn-delete" onclick="removeItem(${index})" title="Remove Item">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                `;
+            });
+            itemsHtml += '</div>';
+
+            // Summary Section
+            const tax = subtotal * 0.05; // 5% Tax example
+            const total = subtotal + tax;
+
+            const summaryHtml = `
+                <div class="cart-summary">
+                    <h3>Order Summary</h3>
+                    <div style="margin-top:20px;">
+                        <div class="summary-row"><span>Subtotal</span> <span>$${subtotal.toFixed(2)}</span></div>
+                        <div class="summary-row"><span>Tax (5%)</span> <span>$${tax.toFixed(2)}</span></div>
+                        <div class="summary-row total-row"><span>Total</span> <span>$${total.toFixed(2)}</span></div>
+                    </div>
+                    
+                    <button class="btn-place-order" onclick="goToOrderPage()">
+                        Place Order <i class="fas fa-arrow-right"></i>
+                    </button>
+                    
+                    <a href="/pages/menu.html" style="display:block; text-align:center; margin-top:15px; color:#777; font-size:0.9rem;">
+                        Add more items
+                    </a>
+                </div>
+            `;
+
+            container.innerHTML = itemsHtml + summaryHtml;
+        }
+
+        // 3. Update Quantity (+ or -)
+        function updateQty(index, change) {
+            let cart = JSON.parse(localStorage.getItem('coffee_cart')) || [];
+            
+            if (cart[index].quantity === 1 && change === -1) {
+                // If qty is 1 and user clicks minus, confirm delete
+                if(confirm("Remove this item from cart?")) {
+                    removeItem(index);
+                }
+                return;
+            }
+
+            cart[index].quantity += change;
+            localStorage.setItem('coffee_cart', JSON.stringify(cart));
+            updateGlobalCartCount(); // Update header badge
+            renderCart(); // Refresh UI
+        }
+
+        // 4. Remove Item
+        function removeItem(index) {
+            let cart = JSON.parse(localStorage.getItem('coffee_cart')) || [];
+            cart.splice(index, 1);
+            localStorage.setItem('coffee_cart', JSON.stringify(cart));
+            updateGlobalCartCount();
+            renderCart();
+        }
+
+        // 5. Place Order Action
+        function goToOrderPage() {
+            // Redirects to orderpage with a special flag 'mode=cart'
+            // This tells the order page to load items from the cart, not the URL
+            window.location.href = '/pages/orderpage.html?mode=cart';
+        }
+    </script>
+</body>
+</html>

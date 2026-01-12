@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Coffee Break</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="../assets/css/style.css">
+
+    <style>
+        /* --- KEEPING YOUR EXACT STYLES --- */
+        .checkout-wrapper { max-width: 1100px; margin: 40px auto; padding: 0 20px; display: grid; grid-template-columns: 1.5fr 1fr; gap: 40px; align-items: start; }
+        .details-card, .summary-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
+        .summary-card { position: sticky; top: 100px; }
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 0.9rem; color: #555; }
+        .input-wrapper { position: relative; }
+        .input-wrapper i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #888; }
+        .input-wrapper input, .input-wrapper textarea { width: 100%; padding: 12px 12px 12px 45px; border: 1px solid #ddd; border-radius: 10px; font-size: 1rem; background: #f9f9f9; transition: 0.3s; }
+        .input-wrapper input:focus, .input-wrapper textarea:focus { border-color: #c7a17a; background: white; outline: none; }
+        .payment-options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; }
+        .pay-card { border: 2px solid #ddd; border-radius: 10px; padding: 15px; cursor: pointer; text-align: center; transition: 0.3s; position: relative; }
+        .pay-card:hover { border-color: #ccc; background: #fcfcfc; }
+        .pay-card input { position: absolute; opacity: 0; cursor: pointer; }
+        .pay-card.active { border-color: #c7a17a; background: #fff8f0; color: #3b2a1e; }
+        .btn-confirm { width: 100%; background: #3b2a1e; color: white; padding: 18px; border: none; border-radius: 50px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 25px; transition: 0.3s; box-shadow: 0 5px 15px rgba(59, 42, 30, 0.3); }
+        .btn-confirm:hover { background: #c7a17a; transform: translateY(-2px); }
+        
+        /* Modal Styles */
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; display: none; justify-content: center; align-items: center; flex-direction: column; }
+        .success-msg { color: white; text-align: center; margin-bottom: 20px; animation: popIn 0.5s ease; }
+        .success-msg i { font-size: 4rem; color: #4CAF50; background: white; padding: 15px; border-radius: 50%; margin-bottom: 15px; }
+        .receipt-box { background: white; width: 360px; padding: 25px; font-family: 'Courier New', monospace; position: relative; text-align: center; }
+        .receipt-box::after { content: ""; position: absolute; bottom: -10px; left: 0; width: 100%; height: 10px; background: radial-gradient(circle, transparent 50%, white 50%), radial-gradient(circle, transparent 50%, white 50%); background-size: 20px 20px; background-position: 0 0, 10px 0; }
+        .receipt-actions { margin-top: 20px; display: flex; gap: 10px; }
+        .btn-act { padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; border: none; }
+        .btn-dl { background: white; color: #333; }
+        .btn-done { background: #4CAF50; color: white; text-decoration: none; }
+        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        @media (max-width: 768px) { .checkout-wrapper { grid-template-columns: 1fr; } .summary-card { order: -1; } }
+    </style>
+</head>
+<body>
+
+    <div id="header-placeholder"></div>
+
+    <form name="orders" method="POST" data-netlify="true" id="hiddenOrderForm" hidden>
+        <input type="hidden" name="form-name" value="orders">
+        <input type="text" name="customer_name" id="netName">
+        <input type="text" name="customer_phone" id="netPhone">
+        <input type="text" name="customer_address" id="netAddr">
+        <input type="text" name="payment_method" id="netPay">
+        <input type="text" name="total_amount" id="netTotal">
+        <textarea name="order_details" id="netDetails"></textarea>
+    </form>
+    <form id="checkoutForm">
+        <div class="checkout-wrapper">
+            
+            <div class="details-card">
+                <h2><i class="fas fa-shipping-fast"></i> Delivery Details</h2>
+                
+                <div class="input-group">
+                    <label>Full Name</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="cName" placeholder="Enter your name" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Phone Number</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-phone"></i>
+                        <input type="tel" id="cPhone" placeholder="0300 1234567" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Delivery Address</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <textarea id="cAddr" rows="2" placeholder="Street, House No, City..." required></textarea>
+                    </div>
+                </div>
+
+                <h2 style="margin-top: 30px;"><i class="fas fa-wallet"></i> Payment Method</h2>
+                <div class="payment-options">
+                    <label class="pay-card active" onclick="selectPay(this)">
+                        <input type="radio" name="payment" value="Cash on Delivery" checked>
+                        <i class="fas fa-money-bill-wave"></i> Cash on Delivery
+                    </label>
+                    <label class="pay-card" onclick="selectPay(this)">
+                        <input type="radio" name="payment" value="Credit Card">
+                        <i class="fas fa-credit-card"></i> Credit Card
+                    </label>
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <h2>Order Summary</h2>
+                <div class="order-items" id="summaryList"></div>
+                <div class="price-row">
+                    <span>Subtotal</span>
+                    <span>$<span id="subTotal">0.00</span></span>
+                </div>
+                <div class="price-row">
+                    <span>Delivery Fee</span>
+                    <span>$0.00</span>
+                </div>
+                <div class="total-row">
+                    <span>Total</span>
+                    <span>$<span id="finalTotal">0.00</span></span>
+                </div>
+
+                <button type="submit" class="btn-confirm">
+                    Confirm & Pay $<span id="btnTotal">0.00</span>
+                </button>
+            </div>
+
+        </div>
+    </form>
+
+    <div class="overlay" id="invoiceModal">
+        <div class="success-msg">
+            <i class="fas fa-check"></i>
+            <h2>Success!</h2>
+            <p>Your order has been placed.</p>
+        </div>
+
+        <div class="receipt-box" id="receipt">
+            <h3 style="margin:0; border-bottom:2px solid #000; padding-bottom:10px;">COFFEE BREAK</h3>
+            <p style="font-size:0.8rem; margin-top:5px;">OFFICIAL RECEIPT</p>
+            
+            <div style="text-align:left; font-size:0.9rem; line-height:1.4; margin-top:20px;">
+                <p><strong>Date:</strong> <span id="invDate"></span></p>
+                <p><strong>Order ID:</strong> #<span id="invId"></span></p>
+                <p><strong>Customer:</strong> <span id="invName"></span></p>
+                <p><strong>Payment:</strong> <span id="invPay"></span></p>
+                <hr style="border:1px dashed #ccc; margin:15px 0;">
+                <div id="invItemsList"></div>
+                <hr style="border:2px solid #000; margin:15px 0;">
+                <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:1.2rem;">
+                    <span>TOTAL</span>
+                    <span>$<span id="invTotal"></span></span>
+                </div>
+            </div>
+            <p style="font-size:0.7rem; color:#777; margin-top:20px;">Thank you for brewing with us!</p>
+        </div>
+
+        <div class="receipt-actions">
+            <button class="btn-act btn-dl" onclick="savePNG()"> <i class="fas fa-download"></i> Save PNG</button>
+            <a href="../index.html" class="btn-act btn-done">Finish</a>
+        </div>
+    </div>
+
+    <div id="footer-placeholder"></div>
+    <script src="/assets/js/app.js"></script>
+
+    <script>
+        let orderItems = [];
+
+        function selectPay(element) {
+            document.querySelectorAll('.pay-card').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+            element.querySelector('input').checked = true;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const direct = sessionStorage.getItem('checkout_items');
+            const cart = localStorage.getItem('coffee_cart');
+
+            if (direct) {
+                orderItems = JSON.parse(direct);
+            } else if (cart) {
+                orderItems = JSON.parse(cart);
+            }
+
+            if(!orderItems || orderItems.length === 0) {
+                alert("Your cart is empty!");
+                window.location.href = '/pages/menu.html';
+                return;
+            }
+
+            renderSummary();
+        });
+
+        function renderSummary() {
+            const list = document.getElementById('summaryList');
+            let total = 0;
+            list.innerHTML = "";
+
+            orderItems.forEach(item => {
+                const lineTotal = item.price * item.quantity;
+                total += lineTotal;
+                list.innerHTML += `
+                    <div class="summary-item">
+                        <div>
+                            <strong>${item.name}</strong>
+                            <small>x${item.quantity}</small>
+                        </div>
+                        <span style="font-weight:bold;">$${lineTotal.toFixed(2)}</span>
+                    </div>
+                `;
+            });
+
+            const totalStr = total.toFixed(2);
+            document.getElementById('subTotal').textContent = totalStr;
+            document.getElementById('finalTotal').textContent = totalStr;
+            document.getElementById('btnTotal').textContent = totalStr;
+        }
+
+        // --- SUBMIT LOGIC WITH NETLIFY INTEGRATION ---
+        document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+            e.preventDefault(); 
+
+            const name = document.getElementById('cName').value;
+            const phone = document.getElementById('cPhone').value;
+            const addr = document.getElementById('cAddr').value;
+            const payment = document.querySelector('input[name="payment"]:checked').value;
+            const total = document.getElementById('finalTotal').textContent;
+
+            // 1. FILL THE HIDDEN NETLIFY FORM (This sends data to Admin Panel)
+            document.getElementById('netName').value = name;
+            document.getElementById('netPhone').value = phone;
+            document.getElementById('netAddr').value = addr;
+            document.getElementById('netPay').value = payment;
+            document.getElementById('netTotal').value = total;
+            
+            // Convert Cart Items to readable text for Admin
+            const cartText = orderItems.map(i => `${i.quantity}x ${i.name}`).join('\n');
+            document.getElementById('netDetails').value = cartText;
+
+            // 2. SEND DATA TO NETLIFY AUTOMATICALLY
+            const hiddenForm = document.getElementById('hiddenOrderForm');
+            const formData = new FormData(hiddenForm);
+
+            fetch("/", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams(formData).toString()
+            }).then(() => {
+                console.log("Order sent to Admin Panel successfully");
+            }).catch((error) => {
+                console.error("Netlify Error:", error);
+            });
+
+            // 3. SHOW THE USER INVOICE (Visual)
+            document.getElementById('invDate').textContent = new Date().toLocaleDateString();
+            document.getElementById('invId').textContent = Math.floor(Math.random() * 90000) + 10000;
+            document.getElementById('invName').textContent = name;
+            document.getElementById('invPay').textContent = payment;
+            document.getElementById('invTotal').textContent = total;
+
+            const invList = document.getElementById('invItemsList');
+            invList.innerHTML = "";
+            orderItems.forEach(item => {
+                invList.innerHTML += `
+                    <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                        <span>${item.quantity}x ${item.name}</span>
+                        <span>$${(item.price * item.quantity).toFixed(2)}</span>
+                    </div>
+                `;
+            });
+
+            document.getElementById('invoiceModal').style.display = 'flex';
+
+            // Clear Cart
+            sessionStorage.removeItem('checkout_items');
+            localStorage.removeItem('coffee_cart');
+            if(typeof updateGlobalCartCount === "function") {
+                updateGlobalCartCount();
+            }
+        });
+
+        function savePNG() {
+            const receipt = document.getElementById('receipt');
+            html2canvas(receipt, { scale: 2 }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'Receipt.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        }
+    </script>
+</body>
+</html>

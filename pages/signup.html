@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signup - Coffee Break</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #4e3b2a;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    header {
+        background-color: #3b2a1e;
+        color: white;
+        padding: 20px 0;
+        text-align: center;
+    }
+
+    header h1 {
+        margin: 0;
+        font-size: 1.8rem;
+    }
+
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex: 1;
+        padding: 20px;
+    }
+
+    .box {
+        background-color: #3b2a1e;
+        padding: 40px;
+        border-radius: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        color: white;
+        width: 100%;
+        max-width: 420px;
+        text-align: center;
+    }
+
+    .box h2 {
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.6rem;
+        gap: 12px;
+    }
+
+    .login-icon {
+        width: 60px;
+        height: auto;
+    }
+
+    .box form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .box label {
+        margin-bottom: 8px;
+        font-weight: bold;
+        text-align: left;
+        font-size: 1rem;
+    }
+
+    .box input {
+        padding: 12px;
+        margin-bottom: 18px;
+        border: none;
+        border-radius: 8px;
+        width: 100%;
+        font-size: 1rem;
+        background-color: #f5f1eb;
+        color: #4e3b2a;
+    }
+
+    input::placeholder {
+        color: #888;
+        font-size: 1rem;
+    }
+
+    .box button {
+        background-color: #c7a17a;
+        color: white;
+        border: none;
+        padding: 14px;
+        border-radius: 50px;
+        cursor: pointer;
+        font-size: 1.2rem;
+        font-weight: bold;
+        transition: 0.3s;
+        margin-top: 10px;
+    }
+
+    .box button:hover {
+        background-color: #b58963;
+        transform: translateY(-3px);
+    }
+
+    #success-message {
+        display: none;
+        background: rgba(76, 175, 80, 0.2);
+        color: #4CAF50;
+        padding: 15px;
+        border-radius: 10px;
+        margin: 20px 0;
+        font-weight: bold;
+        font-size: 1.1rem;
+        border: 1px solid #4CAF50;
+    }
+
+    #error-message {
+        display: none;
+        background: rgba(244, 67, 54, 0.2);
+        color: #f44336;
+        padding: 12px;
+        border-radius: 10px;
+        margin: 15px 0;
+        font-size: 1rem;
+        border: 1px solid #f44336;
+    }
+
+    .box p {
+        margin-top: 20px;
+        font-size: 0.95rem;
+    }
+
+    .box p a {
+        color: #c7a17a;
+        text-decoration: underline;
+        font-weight: bold;
+    }
+
+    .box p a:hover {
+        color: #f5d7b0;
+    }
+
+    footer {
+        background-color: #291a0e;
+        color: #f5f1eb;
+        text-align: center;
+        padding: 20px 0;
+        font-size: 0.9rem;
+    }
+
+    footer a {
+        color: #f5f1eb;
+        text-decoration: none;
+    }
+
+    footer a:hover {
+        color: #c7a17a;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 480px) {
+        header h1 { font-size: 1.5rem; }
+        .box {
+            padding: 30px 20px;
+            margin: 15px;
+        }
+        .box h2 {
+            font-size: 1.4rem;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .login-icon { width: 50px; }
+        .box button { padding: 16px; font-size: 1.1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Brewed for You - Signup</h1>
+  </header>
+
+  <div class="container">
+    <div class="box">
+      <h2>
+        <img src="/assets/images/coffee-icon.png" alt="Coffee Icon" class="login-icon">
+        Create an Account
+      </h2>
+
+      <form id="signup-form">
+        <label for="fullname">Full Name</label>
+        <input type="text" id="fullname" name="fullname" placeholder="Enter your full name" required>
+
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" placeholder="Choose a username" required>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Create a password" required>
+
+        <label for="confirm-password">Confirm Password</label>
+        <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm your password" required>
+
+        <button type="submit">Create Account</button>
+      </form>
+
+      <!-- Messages -->
+      <div id="error-message"></div>
+      <div id="success-message">
+        Account created successfully! Redirecting to login...
+      </div>
+
+      <p>Already have an account? <a href="/pages/login.html">Login</a></p>
+    </div>
+  </div>
+
+  <footer>
+    <p><a href="/pages/faq.html">FAQs</a> | <a href="/pages/livechat.html">Live Chat</a></p>
+    <p>&copy; 2025 Coffee Break. All rights reserved.</p>
+  </footer>
+
+  <script>
+    document.getElementById('signup-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+      const errorDiv = document.getElementById('error-message');
+      const successDiv = document.getElementById('success-message');
+
+      // Reset messages
+      errorDiv.style.display = 'none';
+      successDiv.style.display = 'none';
+
+      // Check if passwords match
+      if (password !== confirmPassword) {
+        errorDiv.textContent = "Passwords do not match!";
+        errorDiv.style.display = 'block';
+        return;
+      }
+
+      if (password.length < 6) {
+        errorDiv.textContent = "Password must be at least 6 characters!";
+        errorDiv.style.display = 'block';
+        return;
+      }
+
+      // Success!
+      successDiv.style.display = 'block';
+
+      // Save user data (simple demo)
+      const user = {
+        fullname: document.getElementById('fullname').value,
+        email: document.getElementById('email').value,
+        username: document.getElementById('username').value
+      };
+      localStorage.setItem('user', JSON.stringify(user));
+
+      // Redirect to login after 1.5 seconds
+      setTimeout(() => {
+        window.location.href = '/pages/login.html';
+      }, 1500);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Coffee Break</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    
+    <style>
+        /* Hero Section */
+        .hero {
+            position: relative;
+            background-color: var(--secondary-brown);
+            color: white;
+            padding: 80px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+            min-height: 80vh; /* Takes up most of the screen */
+        }
+
+        /* The Hero Background Image/GIF */
+        .hero-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover;
+            opacity: 0.3; /* Darken image so text pops */
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            animation: fadeIn 1.5s ease;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+
+        .cta-button {
+            background-color: var(--accent-gold);
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            font-weight: bold;
+            display: inline-block;
+            box-shadow: 0 5px 15px rgba(199, 161, 122, 0.4);
+        }
+        .cta-button:hover {
+            background-color: #b58963;
+            transform: translateY(-3px);
+        }
+
+        /* Section Titles */
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: var(--primary-brown);
+            margin: 60px 0 40px;
+        }
+
+        /* Features Grid */
+        .features-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 40px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-box {
+            text-align: center;
+            max-width: 300px;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            transition: 0.3s;
+        }
+        .feature-box:hover { transform: translateY(-5px); }
+        .feature-box img { width: 80px; margin-bottom: 15px; }
+
+        /* New: Best Sellers Preview */
+        .favorites-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .fav-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .fav-card img { width: 100%; height: 250px; object-fit: cover; }
+        .fav-info { padding: 20px; }
+        .fav-price { color: var(--accent-gold); font-weight: bold; font-size: 1.2rem; display: block; margin: 10px 0; }
+
+        /* New: About Teaser */
+        .about-teaser {
+            background-color: var(--primary-brown);
+            color: white;
+            padding: 80px 20px;
+            margin-top: 60px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 50px;
+        }
+        .about-text { max-width: 500px; }
+        .about-img img { border-radius: 20px; border: 5px solid var(--accent-gold); max-width: 100%; width: 400px; }
+
+        /* Testimonials */
+        .reviews {
+            padding: 60px 20px;
+            background: #fff;
+        }
+        .review-card {
+            background: var(--bg-cream);
+            padding: 30px;
+            border-radius: 20px;
+            margin: 20px auto;
+            max-width: 800px;
+            text-align: center;
+            font-style: italic;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.2rem; }
+            .hero p { font-size: 1.1rem; }
+            .about-teaser { text-align: center; }
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="header-placeholder"></div>
+
+    <section class="hero">
+        <img src="/assets/images/cafe.gif" alt="Coffee Beans Animation" class="hero-bg">
+        
+        <div class="hero-content">
+            <h1>Brewed for You</h1>
+            <p>Your daily dose of happiness, delivered fresh.</p>
+            <a href="/pages/menu.html" class="cta-button">Order Now</a>
+        </div>
+    </section>
+
+    <section>
+        <h2 class="section-title">Why Choose Coffee Break?</h2>
+        <div class="features-container">
+            <div class="feature-box">
+                <img src="/assets/images/coffee_delivery.png" alt="Fast Delivery">
+                <h3>Fast Delivery</h3>
+                <p>Hot coffee delivered to your doorstep in under 30 minutes.</p>
+            </div>
+            <div class="feature-box">
+                <img src="/assets/images/premium1.png" alt="Premium Quality">
+                <h3>Premium Beans</h3>
+                <p>Ethically sourced, 100% Arabica beans for the perfect brew.</p>
+            </div>
+            <div class="feature-box">
+                <img src="/assets/images/coffee-icon.png" alt="Love">
+                <h3>Made with Love</h3>
+                <p>Handcrafted by our expert baristas just for you.</p>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2 class="section-title">Customer Favorites</h2>
+        <div class="favorites-grid">
+            <div class="fav-card">
+                <img src="/assets/images/Iced Spanish Latte.jpeg" alt="Spanish Latte">
+                <div class="fav-info">
+                    <h3>Iced Spanish Latte</h3>
+                    <span class="fav-price">$4.50</span>
+                    <a href="/pages/menu.html" style="color: var(--secondary-brown); text-decoration: underline;">Order Now</a>
+                </div>
+            </div>
+            <div class="fav-card">
+                <img src="/assets/images/Mocha Coffee.jpeg" alt="Mocha">
+                <div class="fav-info">
+                    <h3>Classic Mocha</h3>
+                    <span class="fav-price">$4.00</span>
+                    <a href="/pages/menu.html" style="color: var(--secondary-brown); text-decoration: underline;">Order Now</a>
+                </div>
+            </div>
+            <div class="fav-card">
+                <img src="/assets/images/ice americano.jpeg" alt="Americano">
+                <div class="fav-info">
+                    <h3>Iced Americano</h3>
+                    <span class="fav-price">$3.50</span>
+                    <a href="/pages/menu.html" style="color: var(--secondary-brown); text-decoration: underline;">Order Now</a>
+                </div>
+            </div>
+        </div>
+        <div style="text-align:center; margin-top:30px;">
+            <a href="/pages/menu.html" class="cta-button" style="padding: 10px 30px; font-size:1rem;">View Full Menu</a>
+        </div>
+    </section>
+
+    <section class="about-teaser">
+        <div class="about-img">
+            <img src="/assets/images/laiba.jpg" alt="Our Founder">
+        </div>
+        <div class="about-text">
+            <h2>Brewing Since 2015</h2>
+            <p style="margin: 20px 0; line-height: 1.6; font-size: 1.1rem;">
+                Coffee Break started with a simple mission: to serve the perfect cup of coffee. 
+                What began as a small corner shop has grown into a community of coffee lovers. 
+                Meet our passionate team and learn more about our journey.
+            </p>
+            <a href="/pages/about.html" class="cta-button" style="background: white; color: var(--primary-brown);">Read Our Story</a>
+        </div>
+    </section>
+
+    <section class="reviews">
+        <h2 class="section-title">What People Say</h2>
+        <div class="review-card">
+            <p>"The best Iced Spanish Latte I've ever had! The delivery was super fast and the packaging was eco-friendly. Highly recommended!"</p>
+            <p style="margin-top:15px; font-weight:bold; color:var(--accent-gold);">- Sarah J.</p>
+        </div>
+    </section>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="/assets/js/app.js"></script>
+</body>
+</html>

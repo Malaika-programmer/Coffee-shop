@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Coffee Break</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #4e3b2a; /* Coffee Dark Background */
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-card {
+            background-color: #3b2a1e; /* Darker Brown */
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            color: #fff;
+            border: 1px solid #5e4635;
+        }
+        .login-card h2 { margin-bottom: 20px; color: #c7a17a; }
+        .input-group { margin-bottom: 20px; text-align: left; }
+        .input-group label { display: block; margin-bottom: 8px; font-size: 0.9rem; color: #dcdcdc; }
+        .input-group input {
+            width: 100%; padding: 12px; border-radius: 8px; border: none;
+            background: #f5f1eb; color: #333; font-size: 1rem;
+        }
+        .btn-login {
+            width: 100%; padding: 12px; border-radius: 50px; border: none;
+            background: #c7a17a; color: #fff; font-size: 1.1rem; font-weight: bold;
+            cursor: pointer; transition: 0.3s; margin-top: 10px;
+        }
+        .btn-login:hover { background: #b58963; transform: translateY(-2px); }
+        .links { margin-top: 20px; font-size: 0.9rem; }
+        .links a { color: #c7a17a; text-decoration: none; }
+        
+        /* Success Message styling */
+        #msg { display: none; color: #4CAF50; margin-top: 15px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <div style="font-size: 3rem; margin-bottom: 10px;">☕</div>
+        <h2>Welcome Back</h2>
+        
+        <form id="loginForm">
+            <div class="input-group">
+                <label>Username</label>
+                <input type="text" id="username" placeholder="Enter username" required>
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="password" placeholder="••••••" required>
+            </div>
+            
+            <button type="submit" class="btn-login">Login</button>
+            <div id="msg">Login Successful! Redirecting...</div>
+        </form>
+
+        <div class="links">
+            <p>New here? <a href="signup.html">Create Account</a></p>
+            <p style="margin-top: 10px;"><a href="../index.html">← Back to Home</a></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const user = document.getElementById('username').value;
+            
+            // 1. Save User
+            localStorage.setItem('user', JSON.stringify({ name: user }));
+
+            // 2. Show Message & Redirect to Loading Page
+            document.getElementById('msg').style.display = 'block';
+            setTimeout(() => {
+                window.location.href = 'loading.html'; // Redirects to loading page
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

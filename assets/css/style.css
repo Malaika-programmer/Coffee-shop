@@ -1,0 +1,217 @@
+/* --- 1. VARIABLES & RESET --- */
+:root {
+    --primary-brown: #3b2a1e;   /* Dark Espresso */
+    --secondary-brown: #4e3b2a; /* Milk Chocolate */
+    --accent-gold: #c7a17a;     /* Gold/Latte */
+    --bg-cream: #f5f1eb;        /* Cream Background */
+    --text-white: #ffffff;
+    --footer-bg: #291a0e;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-cream);
+    color: var(--secondary-brown);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden; /* Prevents horizontal scroll */
+}
+
+a { text-decoration: none; color: inherit; transition: 0.3s; }
+ul { list-style: none; }
+
+/* --- 2. HEADER & NAVIGATION --- */
+header {
+    background-color: var(--primary-brown);
+    color: var(--text-white);
+    padding: 15px 5%;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.main-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+/* Logo */
+.nav-logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--text-white);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.nav-logo img { width: 40px; height: auto; }
+
+/* Desktop Menu (Links) */
+.desktop-menu {
+    display: flex;
+    gap: 25px;
+    list-style: none;
+}
+
+.desktop-menu li a {
+    color: var(--text-white);
+    font-size: 16px;
+    padding-bottom: 5px;
+    font-weight: 500;
+}
+
+.desktop-menu li a:hover {
+    color: var(--accent-gold);
+    border-bottom: 2px solid var(--accent-gold);
+}
+
+/* Right Side Actions (Cart + Auth) */
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Cart Icon */
+.cart-link {
+    position: relative;
+    color: var(--text-white);
+    font-size: 1.2rem;
+    transition: transform 0.2s;
+}
+.cart-link:hover { transform: scale(1.1); color: var(--accent-gold); }
+
+.cart-count {
+    position: absolute;
+    top: -8px; right: -10px;
+    background: var(--accent-gold);
+    color: white;
+    font-size: 0.7rem;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: bold;
+}
+
+/* Buttons */
+.btn-login {
+    background: transparent;
+    color: var(--text-white);
+    padding: 8px 20px;
+    border-radius: 50px;
+    border: 1px solid var(--text-white);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+}
+.btn-login:hover {
+    background: var(--text-white);
+    color: var(--primary-brown);
+}
+
+.btn-logout {
+    background-color: #d32f2f;
+    border-color: #d32f2f;
+    color: white;
+}
+.btn-logout:hover {
+    background-color: #b71c1c;
+    color: white;
+}
+
+/* --- 3. MOBILE SIDEBAR --- */
+.hamburger {
+    display: none; /* Hidden by default on Desktop */
+    position: fixed; top: 20px; right: 20px;
+    font-size: 1.8rem;
+    background: var(--primary-brown);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    z-index: 1100;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.sidebar {
+    position: fixed; top: 0; right: -300px;
+    width: 280px; height: 100vh;
+    background: var(--primary-brown);
+    transition: right 0.4s ease;
+    z-index: 1200;
+    padding-top: 20px;
+    box-shadow: -5px 0 15px rgba(0,0,0,0.3);
+}
+.sidebar.active { right: 0; }
+
+.close-btn {
+    position: absolute; top: 15px; right: 20px;
+    font-size: 2.5rem; color: white; cursor: pointer;
+}
+
+.sidebar-header {
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 20px;
+}
+.sidebar-header img { width: 60px; margin-bottom: 10px; }
+.sidebar-header h3 { color: var(--accent-gold); }
+
+.sidebar ul li { 
+    padding: 15px 30px; 
+    border-bottom: 1px solid rgba(255,255,255,0.05); 
+}
+.sidebar ul li a { 
+    color: var(--text-white); 
+    font-size: 1.1rem; 
+    display: block; 
+}
+.sidebar-auth { padding: 30px; text-align: center; }
+
+.overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5); z-index: 1050;
+    opacity: 0; visibility: hidden; transition: 0.3s;
+}
+.overlay.active { opacity: 1; visibility: visible; }
+
+/* --- 4. FOOTER --- */
+footer {
+    background-color: var(--footer-bg);
+    color: var(--text-white);
+    padding: 40px 20px;
+    margin-top: auto;
+}
+.footer-container {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+}
+.footer-col h3 { color: var(--accent-gold); margin-bottom: 15px; }
+.footer-col ul li { margin-bottom: 10px; }
+.footer-col ul li a { color: #ccc; }
+.footer-col ul li a:hover { color: var(--accent-gold); }
+
+/* --- 5. RESPONSIVE BREAKPOINT (Mobile/Tablet) --- */
+@media (max-width: 900px) {
+    /* Hide Desktop Elements */
+    .desktop-menu { display: none; }
+    .desktop-auth { display: none; }
+
+    /* Show Mobile Elements */
+    .hamburger { display: block; }
+    
+    /* Adjust Header layout */
+    header { padding: 15px 20px; }
+    
+    /* Move nav actions (cart) to left of hamburger */
+    .nav-actions { margin-right: 60px; }
+}

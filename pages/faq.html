@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQs - Coffee Break</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
+
+    <style>
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .page-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: var(--primary-brown);
+            margin-bottom: 40px;
+        }
+
+        /* Specific Accordion Overrides if needed */
+        .accordion-item {
+            border: 1px solid #ddd;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .accordion-btn {
+            width: 100%;
+            background: white;
+            color: var(--secondary-brown);
+            padding: 20px;
+            text-align: left;
+            border: none;
+            outline: none;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .accordion-btn:hover {
+            background-color: #f9f9f9;
+            color: var(--accent-gold);
+        }
+
+        .accordion-btn i {
+            transition: transform 0.3s ease;
+            color: var(--accent-gold);
+        }
+
+        /* Rotate icon when active */
+        .accordion-btn.active i {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            background-color: #fafafa;
+            padding: 0 20px; /* Hidden state padding */
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .accordion-content.active {
+            padding: 20px; /* Visible state padding */
+            max-height: 300px; /* Arbitrary height for animation */
+            border-top: 1px solid #eee;
+        }
+
+        .live-chat-cta {
+            text-align: center;
+            margin-top: 50px;
+            padding: 30px;
+            background: var(--primary-brown);
+            color: white;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="header-placeholder"></div>
+
+    <main class="faq-container">
+        <h1 class="page-title">Frequently Asked Questions</h1>
+
+        <div class="accordion">
+            <div class="accordion-item">
+                <button class="accordion-btn">
+                    How do I track my order?
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="accordion-content">
+                    <p>Once your order is confirmed, you can track it in real-time by logging into your account and clicking on the <strong>"Order History"</strong> tab. We also send email updates at every step!</p>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <button class="accordion-btn">
+                    What is the delivery time frame?
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="accordion-content">
+                    <p>For local deliveries, we aim for <strong>30-45 minutes</strong>. For merchandise or bean orders, standard shipping is 3-5 business days depending on your location.</p>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <button class="accordion-btn">
+                    What payment methods do you accept?
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="accordion-content">
+                    <p>We accept all major credit/debit cards (Visa, Mastercard), PayPal, and Cash on Delivery (COD) for local orders.</p>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <button class="accordion-btn">
+                    Can I customize my coffee order?
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="accordion-content">
+                    <p>Absolutely! You can choose your milk type (Oat, Almond, Whole), sweetness level, and add extra shots or flavors directly on our <a href="/pages/customize.html" style="color:#c7a17a; text-decoration:underline;">Customization Page</a>.</p>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <button class="accordion-btn">
+                    Do you offer vegan options?
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="accordion-content">
+                    <p>Yes, we have a wide range of plant-based milk options and vegan snacks. Look for the leaf icon on our menu!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="live-chat-cta">
+            <h2>Still have questions?</h2>
+            <p style="margin: 15px 0;">Our support team is available 24/7 to help you with your cravings.</p>
+            <a href="/pages/livechat.html">
+                <button style="background: var(--accent-gold); color: white; border: none; padding: 12px 30px; border-radius: 50px; font-size: 1.1rem; cursor: pointer; font-weight: bold;">
+                    Start Live Chat
+                </button>
+            </a>
+        </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="/assets/js/app.js"></script>
+
+    <script>
+        document.querySelectorAll('.accordion-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                // Toggle active class on button (for rotation)
+                button.classList.toggle('active');
+                
+                // Toggle active class on content (for visibility)
+                const content = button.nextElementSibling;
+                
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                    content.classList.remove('active');
+                } else {
+                    // Close other open items (Optional - Accordion style)
+                    document.querySelectorAll('.accordion-content').forEach(c => {
+                        c.style.maxHeight = null;
+                        c.classList.remove('active');
+                    });
+                    document.querySelectorAll('.accordion-btn').forEach(b => b.classList.remove('active'));
+
+                    // Open clicked item
+                    button.classList.add('active');
+                    content.classList.add('active');
+                    content.style.maxHeight = content.scrollHeight + "px";
+                }
+            });
+        });
+    </script>
+</body>
+</html>
